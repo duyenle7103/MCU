@@ -114,13 +114,13 @@ int main(void)
   MX_GPIO_Init();
  800015e:	f000 f85d 	bl	800021c <MX_GPIO_Init>
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, SET);
- 8000162:	2201      	movs	r2, #1
+  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, RESET);
+ 8000162:	2200      	movs	r2, #0
  8000164:	2120      	movs	r1, #32
  8000166:	480e      	ldr	r0, [pc, #56]	; (80001a0 <main+0x54>)
  8000168:	f000 fbec 	bl	8000944 <HAL_GPIO_WritePin>
-  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, RESET);
- 800016c:	2200      	movs	r2, #0
+  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, SET);
+ 800016c:	2201      	movs	r2, #1
  800016e:	2140      	movs	r1, #64	; 0x40
  8000170:	480b      	ldr	r0, [pc, #44]	; (80001a0 <main+0x54>)
  8000172:	f000 fbe7 	bl	8000944 <HAL_GPIO_WritePin>
