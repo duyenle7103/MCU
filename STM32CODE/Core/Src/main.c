@@ -103,6 +103,16 @@ int main(void)
 	  case Red:
 		  if(timer_counter <= 0)
 		  {
+			  status = Green;
+			  timer_counter = Green_counter;
+			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, SET);
+			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, SET);
+			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, RESET);
+		  }
+		  break;
+	  case Green:
+		  if(timer_counter <= 0)
+		  {
 			  status = Yellow;
 			  timer_counter = Yellow_counter;
 			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, SET);
@@ -110,7 +120,7 @@ int main(void)
 			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, SET);
 		  }
 		  break;
-	  case Green:
+	  default:
 		  if(timer_counter <= 0)
 		  {
 			  status = Red;
@@ -118,16 +128,6 @@ int main(void)
 			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, RESET);
 			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, SET);
 			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, SET);
-		  }
-		  break;
-	  default:
-		  if(timer_counter <= 0)
-		  {
-			  status = Green;
-			  timer_counter = Green_counter;
-			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, SET);
-			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, SET);
-			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, RESET);
 		  }
 	  }
 	  timer_counter--;

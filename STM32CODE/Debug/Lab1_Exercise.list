@@ -151,24 +151,24 @@ int main(void)
  8000192:	2b00      	cmp	r3, #0
  8000194:	dc41      	bgt.n	800021a <main+0xce>
 		  {
-			  status = Yellow;
- 8000196:	2301      	movs	r3, #1
+			  status = Green;
+ 8000196:	2302      	movs	r3, #2
  8000198:	71fb      	strb	r3, [r7, #7]
-			  timer_counter = Yellow_counter;
- 800019a:	2302      	movs	r3, #2
+			  timer_counter = Green_counter;
+ 800019a:	2303      	movs	r3, #3
  800019c:	603b      	str	r3, [r7, #0]
 			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, SET);
  800019e:	2201      	movs	r2, #1
  80001a0:	2120      	movs	r1, #32
  80001a2:	4823      	ldr	r0, [pc, #140]	; (8000230 <main+0xe4>)
  80001a4:	f000 fc16 	bl	80009d4 <HAL_GPIO_WritePin>
-			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, RESET);
- 80001a8:	2200      	movs	r2, #0
+			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, SET);
+ 80001a8:	2201      	movs	r2, #1
  80001aa:	2140      	movs	r1, #64	; 0x40
  80001ac:	4820      	ldr	r0, [pc, #128]	; (8000230 <main+0xe4>)
  80001ae:	f000 fc11 	bl	80009d4 <HAL_GPIO_WritePin>
-			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, SET);
- 80001b2:	2201      	movs	r2, #1
+			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, RESET);
+ 80001b2:	2200      	movs	r2, #0
  80001b4:	2180      	movs	r1, #128	; 0x80
  80001b6:	481e      	ldr	r0, [pc, #120]	; (8000230 <main+0xe4>)
  80001b8:	f000 fc0c 	bl	80009d4 <HAL_GPIO_WritePin>
@@ -181,19 +181,19 @@ int main(void)
  80001c0:	2b00      	cmp	r3, #0
  80001c2:	dc2c      	bgt.n	800021e <main+0xd2>
 		  {
-			  status = Red;
- 80001c4:	2300      	movs	r3, #0
+			  status = Yellow;
+ 80001c4:	2301      	movs	r3, #1
  80001c6:	71fb      	strb	r3, [r7, #7]
-			  timer_counter = Red_counter;
- 80001c8:	2305      	movs	r3, #5
+			  timer_counter = Yellow_counter;
+ 80001c8:	2302      	movs	r3, #2
  80001ca:	603b      	str	r3, [r7, #0]
-			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, RESET);
- 80001cc:	2200      	movs	r2, #0
+			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, SET);
+ 80001cc:	2201      	movs	r2, #1
  80001ce:	2120      	movs	r1, #32
  80001d0:	4817      	ldr	r0, [pc, #92]	; (8000230 <main+0xe4>)
  80001d2:	f000 fbff 	bl	80009d4 <HAL_GPIO_WritePin>
-			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, SET);
- 80001d6:	2201      	movs	r2, #1
+			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, RESET);
+ 80001d6:	2200      	movs	r2, #0
  80001d8:	2140      	movs	r1, #64	; 0x40
  80001da:	4815      	ldr	r0, [pc, #84]	; (8000230 <main+0xe4>)
  80001dc:	f000 fbfa 	bl	80009d4 <HAL_GPIO_WritePin>
@@ -211,14 +211,14 @@ int main(void)
  80001ee:	2b00      	cmp	r3, #0
  80001f0:	dc16      	bgt.n	8000220 <main+0xd4>
 		  {
-			  status = Green;
- 80001f2:	2302      	movs	r3, #2
+			  status = Red;
+ 80001f2:	2300      	movs	r3, #0
  80001f4:	71fb      	strb	r3, [r7, #7]
-			  timer_counter = Green_counter;
- 80001f6:	2303      	movs	r3, #3
+			  timer_counter = Red_counter;
+ 80001f6:	2305      	movs	r3, #5
  80001f8:	603b      	str	r3, [r7, #0]
-			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, SET);
- 80001fa:	2201      	movs	r2, #1
+			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, RESET);
+ 80001fa:	2200      	movs	r2, #0
  80001fc:	2120      	movs	r1, #32
  80001fe:	480c      	ldr	r0, [pc, #48]	; (8000230 <main+0xe4>)
  8000200:	f000 fbe8 	bl	80009d4 <HAL_GPIO_WritePin>
@@ -227,8 +227,8 @@ int main(void)
  8000206:	2140      	movs	r1, #64	; 0x40
  8000208:	4809      	ldr	r0, [pc, #36]	; (8000230 <main+0xe4>)
  800020a:	f000 fbe3 	bl	80009d4 <HAL_GPIO_WritePin>
-			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, RESET);
- 800020e:	2200      	movs	r2, #0
+			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, SET);
+ 800020e:	2201      	movs	r2, #1
  8000210:	2180      	movs	r1, #128	; 0x80
  8000212:	4807      	ldr	r0, [pc, #28]	; (8000230 <main+0xe4>)
  8000214:	f000 fbde 	bl	80009d4 <HAL_GPIO_WritePin>
