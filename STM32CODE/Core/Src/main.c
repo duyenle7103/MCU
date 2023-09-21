@@ -31,14 +31,12 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-enum color{red, yellow, green};
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define red_counter 5
-#define yellow_counter 2
-#define green_counter 3
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -112,8 +110,7 @@ void on_green(int number)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	int status = yellow;
-	int timer_counter = yellow_counter;
+	int timer_counter = 9;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -135,45 +132,37 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  on_yellow(1);
-  on_red(2);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  switch (status)
+	  switch (timer_counter)
 	  {
-	  case red:
-		  if(timer_counter <= 0)
-		  {
-			  status = green;
-			  timer_counter = green_counter;
-			  on_green(1);
-			  on_red(2);
-		  }
-		  else if(timer_counter == yellow_counter)
-		  {
-			  on_yellow(2);
-		  }
+	  case 9:
+		  on_red(1);
+		  on_green(2);
 		  break;
-	  case green:
-		  if(timer_counter <= 0)
-		  {
-			  status = yellow;
-			  timer_counter = yellow_counter;
-			  on_yellow(1);
-		  }
+	  case 6:
+		  on_yellow(2);
+		  break;
+	  case 4:
+		  on_green(1);
+		  on_red(2);
+		  break;
+	  case 1:
+		  on_yellow(1);
+		  break;
+	  case 8:
+	  case 7:
+	  case 5:
+	  case 3:
+	  case 2:
 		  break;
 	  default:
-		  if(timer_counter <= 0)
-		  {
-			  status = red;
-			  timer_counter = red_counter;
-			  on_red(1);
-			  on_green(2);
-		  }
+		  timer_counter = 10;
 	  }
 	  timer_counter--;
 	  HAL_Delay(1000);
