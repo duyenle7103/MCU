@@ -31,12 +31,14 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+enum color{red, yellow, green};
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define red_counter 5
+#define yellow_counter 2
+#define green_counter 3
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -49,12 +51,58 @@
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-
+void on_red();
+void on_yellow();
+void on_green();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void on_red(int number)
+{
+	if(number == 1)
+	{
+		HAL_GPIO_WritePin(RED_1_GPIO_Port, RED_1_Pin, RESET);
+		HAL_GPIO_WritePin(YELLOW_1_GPIO_Port, YELLOW_1_Pin, SET);
+		HAL_GPIO_WritePin(GREEN_1_GPIO_Port, GREEN_1_Pin, SET);
+	}
+	else
+	{
+		HAL_GPIO_WritePin(RED_2_GPIO_Port, RED_2_Pin, RESET);
+		HAL_GPIO_WritePin(YELLOW_2_GPIO_Port, YELLOW_2_Pin, SET);
+		HAL_GPIO_WritePin(GREEN_2_GPIO_Port, GREEN_2_Pin, SET);
+	}
+}
+void on_yellow(int number)
+{
+	if(number == 1)
+	{
+		HAL_GPIO_WritePin(RED_1_GPIO_Port, RED_1_Pin, SET);
+		HAL_GPIO_WritePin(YELLOW_1_GPIO_Port, YELLOW_1_Pin, RESET);
+		HAL_GPIO_WritePin(GREEN_1_GPIO_Port, GREEN_1_Pin, SET);
+	}
+	else
+	{
+		HAL_GPIO_WritePin(RED_2_GPIO_Port, RED_2_Pin, SET);
+		HAL_GPIO_WritePin(YELLOW_2_GPIO_Port, YELLOW_2_Pin, RESET);
+		HAL_GPIO_WritePin(GREEN_2_GPIO_Port, GREEN_2_Pin, SET);
+	}
+}
+void on_green(int number)
+{
+	if(number == 1)
+	{
+		HAL_GPIO_WritePin(RED_1_GPIO_Port, RED_1_Pin, SET);
+		HAL_GPIO_WritePin(YELLOW_1_GPIO_Port, YELLOW_1_Pin, SET);
+		HAL_GPIO_WritePin(GREEN_1_GPIO_Port, GREEN_1_Pin, RESET);
+	}
+	else
+	{
+		HAL_GPIO_WritePin(RED_2_GPIO_Port, RED_2_Pin, SET);
+		HAL_GPIO_WritePin(YELLOW_2_GPIO_Port, YELLOW_2_Pin, SET);
+		HAL_GPIO_WritePin(GREEN_2_GPIO_Port, GREEN_2_Pin, RESET);
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -64,7 +112,8 @@ static void MX_GPIO_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	int status = yellow;
+	int timer_counter = yellow_counter;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -86,13 +135,48 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  on_yellow(1);
+  on_red(2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  switch (status)
+	  {
+	  case red:
+		  if(timer_counter <= 0)
+		  {
+			  status = green;
+			  timer_counter = green_counter;
+			  on_green(1);
+			  on_red(2);
+		  }
+		  else if(timer_counter == yellow_counter)
+		  {
+			  on_yellow(2);
+		  }
+		  break;
+	  case green:
+		  if(timer_counter <= 0)
+		  {
+			  status = yellow;
+			  timer_counter = yellow_counter;
+			  on_yellow(1);
+		  }
+		  break;
+	  default:
+		  if(timer_counter <= 0)
+		  {
+			  status = red;
+			  timer_counter = red_counter;
+			  on_red(1);
+			  on_green(2);
+		  }
+	  }
+	  timer_counter--;
+	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -151,10 +235,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|LED_YELLOW_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, RED_1_Pin|YELLOW_1_Pin|GREEN_1_Pin|RED_2_Pin
+                          |YELLOW_2_Pin|GREEN_2_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_RED_Pin LED_YELLOW_Pin */
-  GPIO_InitStruct.Pin = LED_RED_Pin|LED_YELLOW_Pin;
+  /*Configure GPIO pins : RED_1_Pin YELLOW_1_Pin GREEN_1_Pin RED_2_Pin
+                           YELLOW_2_Pin GREEN_2_Pin */
+  GPIO_InitStruct.Pin = RED_1_Pin|YELLOW_1_Pin|GREEN_1_Pin|RED_2_Pin
+                          |YELLOW_2_Pin|GREEN_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
