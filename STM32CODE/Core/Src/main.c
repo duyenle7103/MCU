@@ -31,12 +31,15 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+enum state{RED1_GREEN2, RED1_YELLOW2, GREEN1_RED2, YELLOW1_RED2};
+enum color{red, yellow, green};
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define red_counter 5
+#define yellow_counter 2
+#define green_counter 3
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -49,57 +52,71 @@
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-void on_red();
-void on_yellow();
-void on_green();
+void on_light(enum color light, int number);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void on_red(int number)
+void on_light(enum color light, int number)
 {
+	/* Declare variables */
+	GPIO_TypeDef *red_port = NULL;
+	GPIO_TypeDef *yellow_port = NULL;
+	GPIO_TypeDef *green_port = NULL;
+
+	uint16_t red_pin = 0;
+	uint16_t yellow_pin = 0;
+	uint16_t green_pin = 0;
+
+	GPIO_PinState red_state = SET;
+	GPIO_PinState yellow_state = SET;
+	GPIO_PinState green_state = SET;
+
+	/* Select the LED cluster */
 	if(number == 1)
 	{
-		HAL_GPIO_WritePin(RED_1_GPIO_Port, RED_1_Pin, RESET);
-		HAL_GPIO_WritePin(YELLOW_1_GPIO_Port, YELLOW_1_Pin, SET);
-		HAL_GPIO_WritePin(GREEN_1_GPIO_Port, GREEN_1_Pin, SET);
+		red_port = RED_1_GPIO_Port;
+		yellow_port = YELLOW_1_GPIO_Port;
+		green_port = GREEN_1_GPIO_Port;
+
+		red_pin = RED_1_Pin;
+		yellow_pin = YELLOW_1_Pin;
+		green_pin = GREEN_1_Pin;
 	}
 	else
 	{
-		HAL_GPIO_WritePin(RED_2_GPIO_Port, RED_2_Pin, RESET);
-		HAL_GPIO_WritePin(YELLOW_2_GPIO_Port, YELLOW_2_Pin, SET);
-		HAL_GPIO_WritePin(GREEN_2_GPIO_Port, GREEN_2_Pin, SET);
+		red_port = RED_2_GPIO_Port;
+		yellow_port = YELLOW_2_GPIO_Port;
+		green_port = GREEN_2_GPIO_Port;
+
+		red_pin = RED_2_Pin;
+		yellow_pin = YELLOW_2_Pin;
+		green_pin = GREEN_2_Pin;
 	}
-}
-void on_yellow(int number)
-{
-	if(number == 1)
+
+	/* Select light to turn on */
+	switch (light)
 	{
-		HAL_GPIO_WritePin(RED_1_GPIO_Port, RED_1_Pin, SET);
-		HAL_GPIO_WritePin(YELLOW_1_GPIO_Port, YELLOW_1_Pin, RESET);
-		HAL_GPIO_WritePin(GREEN_1_GPIO_Port, GREEN_1_Pin, SET);
+	case red:
+		red_state = RESET;
+		yellow_state = SET;
+		green_state = SET;
+		break;
+	case yellow:
+		red_state = SET;
+		yellow_state = RESET;
+		green_state = SET;
+		break;
+	default:
+		red_state = SET;
+		yellow_state = SET;
+		green_state = RESET;
 	}
-	else
-	{
-		HAL_GPIO_WritePin(RED_2_GPIO_Port, RED_2_Pin, SET);
-		HAL_GPIO_WritePin(YELLOW_2_GPIO_Port, YELLOW_2_Pin, RESET);
-		HAL_GPIO_WritePin(GREEN_2_GPIO_Port, GREEN_2_Pin, SET);
-	}
-}
-void on_green(int number)
-{
-	if(number == 1)
-	{
-		HAL_GPIO_WritePin(RED_1_GPIO_Port, RED_1_Pin, SET);
-		HAL_GPIO_WritePin(YELLOW_1_GPIO_Port, YELLOW_1_Pin, SET);
-		HAL_GPIO_WritePin(GREEN_1_GPIO_Port, GREEN_1_Pin, RESET);
-	}
-	else
-	{
-		HAL_GPIO_WritePin(RED_2_GPIO_Port, RED_2_Pin, SET);
-		HAL_GPIO_WritePin(YELLOW_2_GPIO_Port, YELLOW_2_Pin, SET);
-		HAL_GPIO_WritePin(GREEN_2_GPIO_Port, GREEN_2_Pin, RESET);
-	}
+
+	/* Function to turn on light */
+	HAL_GPIO_WritePin(red_port, red_pin, red_state);
+	HAL_GPIO_WritePin(yellow_port, yellow_pin, yellow_state);
+	HAL_GPIO_WritePin(green_port, green_pin, green_state);
 }
 /* USER CODE END 0 */
 
@@ -110,7 +127,9 @@ void on_green(int number)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	int timer_counter = 9;
+	enum state current = RED1_GREEN2;
+	int timer_counter_1 = red_counter;
+	int timer_counter_2 = green_counter;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -132,39 +151,54 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  on_light(red, 1);
+  on_light(green, 2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  switch (timer_counter)
+	  switch (current)
 	  {
-	  case 9:
-		  on_red(1);
-		  on_green(2);
+	  case RED1_GREEN2:
+		  if(timer_counter_2 <= 0)
+		  {
+			  current = RED1_YELLOW2;
+			  on_light(yellow, 2);
+			  timer_counter_2 = yellow_counter;
+		  }
 		  break;
-	  case 6:
-		  on_yellow(2);
+	  case RED1_YELLOW2:
+		  if(timer_counter_2 <= 0)
+		  {
+			  current = GREEN1_RED2;
+			  on_light(green, 1);
+			  timer_counter_1 = green_counter;
+			  on_light(red, 2);
+			  timer_counter_2 = red_counter;
+		  }
 		  break;
-	  case 4:
-		  on_green(1);
-		  on_red(2);
-		  break;
-	  case 1:
-		  on_yellow(1);
-		  break;
-	  case 8:
-	  case 7:
-	  case 5:
-	  case 3:
-	  case 2:
+	  case GREEN1_RED2:
+		  if(timer_counter_1 <= 0)
+		  {
+			  current = YELLOW1_RED2;
+			  on_light(yellow, 1);
+			  timer_counter_1 = yellow_counter;
+		  }
 		  break;
 	  default:
-		  timer_counter = 10;
+		  if(timer_counter_1 <= 0)
+		  {
+			  current = RED1_GREEN2;
+			  on_light(red, 1);
+			  timer_counter_1 = red_counter;
+			  on_light(green, 2);
+			  timer_counter_2 = green_counter;
+		  }
 	  }
-	  timer_counter--;
+	  timer_counter_1--;
+	  timer_counter_2--;
 	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
