@@ -49,12 +49,110 @@
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-
+void setNumberOnClock(int num);
+void clearNumberOnClock(int num);
+void clearAllClock();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void setNumberOnClock(int num)
+{
+	switch (num)
+	{
+	case 0:
+		HAL_GPIO_WritePin(hour_0_GPIO_Port, hour_0_Pin, RESET);
+		break;
+	case 1:
+		HAL_GPIO_WritePin(hour_1_GPIO_Port, hour_1_Pin, RESET);
+		break;
+	case 2:
+		HAL_GPIO_WritePin(hour_2_GPIO_Port, hour_2_Pin, RESET);
+		break;
+	case 3:
+		HAL_GPIO_WritePin(hour_3_GPIO_Port, hour_3_Pin, RESET);
+		break;
+	case 4:
+		HAL_GPIO_WritePin(hour_4_GPIO_Port, hour_4_Pin, RESET);
+		break;
+	case 5:
+		HAL_GPIO_WritePin(hour_5_GPIO_Port, hour_5_Pin, RESET);
+		break;
+	case 6:
+		HAL_GPIO_WritePin(hour_6_GPIO_Port, hour_6_Pin, RESET);
+		break;
+	case 7:
+		HAL_GPIO_WritePin(hour_7_GPIO_Port, hour_7_Pin, RESET);
+		break;
+	case 8:
+		HAL_GPIO_WritePin(hour_8_GPIO_Port, hour_8_Pin, RESET);
+		break;
+	case 9:
+		HAL_GPIO_WritePin(hour_9_GPIO_Port, hour_9_Pin, RESET);
+		break;
+	case 10:
+		HAL_GPIO_WritePin(hour_10_GPIO_Port, hour_10_Pin, RESET);
+		break;
+	default:
+		HAL_GPIO_WritePin(hour_11_GPIO_Port, hour_11_Pin, RESET);
+	}
+}
+void clearNumberOnClock(int num)
+{
+	switch (num)
+	{
+	case 0:
+		HAL_GPIO_WritePin(hour_0_GPIO_Port, hour_0_Pin, SET);
+		break;
+	case 1:
+		HAL_GPIO_WritePin(hour_1_GPIO_Port, hour_1_Pin, SET);
+		break;
+	case 2:
+		HAL_GPIO_WritePin(hour_2_GPIO_Port, hour_2_Pin, SET);
+		break;
+	case 3:
+		HAL_GPIO_WritePin(hour_3_GPIO_Port, hour_3_Pin, SET);
+		break;
+	case 4:
+		HAL_GPIO_WritePin(hour_4_GPIO_Port, hour_4_Pin, SET);
+		break;
+	case 5:
+		HAL_GPIO_WritePin(hour_5_GPIO_Port, hour_5_Pin, SET);
+		break;
+	case 6:
+		HAL_GPIO_WritePin(hour_6_GPIO_Port, hour_6_Pin, SET);
+		break;
+	case 7:
+		HAL_GPIO_WritePin(hour_7_GPIO_Port, hour_7_Pin, SET);
+		break;
+	case 8:
+		HAL_GPIO_WritePin(hour_8_GPIO_Port, hour_8_Pin, SET);
+		break;
+	case 9:
+		HAL_GPIO_WritePin(hour_9_GPIO_Port, hour_9_Pin, SET);
+		break;
+	case 10:
+		HAL_GPIO_WritePin(hour_10_GPIO_Port, hour_10_Pin, SET);
+		break;
+	default:
+		HAL_GPIO_WritePin(hour_11_GPIO_Port, hour_11_Pin, SET);
+	}
+}
+void clearAllClock()
+{
+	HAL_GPIO_WritePin(hour_0_GPIO_Port, hour_0_Pin, SET);
+	HAL_GPIO_WritePin(hour_1_GPIO_Port, hour_1_Pin, SET);
+	HAL_GPIO_WritePin(hour_2_GPIO_Port, hour_2_Pin, SET);
+	HAL_GPIO_WritePin(hour_3_GPIO_Port, hour_3_Pin, SET);
+	HAL_GPIO_WritePin(hour_4_GPIO_Port, hour_4_Pin, SET);
+	HAL_GPIO_WritePin(hour_5_GPIO_Port, hour_5_Pin, SET);
+	HAL_GPIO_WritePin(hour_6_GPIO_Port, hour_6_Pin, SET);
+	HAL_GPIO_WritePin(hour_7_GPIO_Port, hour_7_Pin, SET);
+	HAL_GPIO_WritePin(hour_8_GPIO_Port, hour_8_Pin, SET);
+	HAL_GPIO_WritePin(hour_9_GPIO_Port, hour_9_Pin, SET);
+	HAL_GPIO_WritePin(hour_10_GPIO_Port, hour_10_Pin, SET);
+	HAL_GPIO_WritePin(hour_11_GPIO_Port, hour_11_Pin, SET);
+}
 /* USER CODE END 0 */
 
 /**
@@ -64,7 +162,7 @@ static void MX_GPIO_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	int counter = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -86,13 +184,20 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  clearAllClock();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  clearNumberOnClock(counter - 1);
+	  if(counter >= 12)
+	  {
+		  counter = 0;
+	  }
+	  setNumberOnClock(counter++);
+	  HAL_Delay (1000) ;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -151,10 +256,16 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|LED_YELLOW_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, hour_0_Pin|hour_1_Pin|hour_2_Pin|hour_3_Pin
+                          |hour_4_Pin|hour_5_Pin|hour_6_Pin|hour_7_Pin
+                          |hour_8_Pin|hour_9_Pin|hour_10_Pin|hour_11_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_RED_Pin LED_YELLOW_Pin */
-  GPIO_InitStruct.Pin = LED_RED_Pin|LED_YELLOW_Pin;
+  /*Configure GPIO pins : hour_0_Pin hour_1_Pin hour_2_Pin hour_3_Pin
+                           hour_4_Pin hour_5_Pin hour_6_Pin hour_7_Pin
+                           hour_8_Pin hour_9_Pin hour_10_Pin hour_11_Pin */
+  GPIO_InitStruct.Pin = hour_0_Pin|hour_1_Pin|hour_2_Pin|hour_3_Pin
+                          |hour_4_Pin|hour_5_Pin|hour_6_Pin|hour_7_Pin
+                          |hour_8_Pin|hour_9_Pin|hour_10_Pin|hour_11_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
