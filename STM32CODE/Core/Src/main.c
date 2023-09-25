@@ -162,7 +162,9 @@ void clearAllClock()
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	int counter = 0;
+	int second = 0;
+	int minute = 0;
+	int hour = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -184,20 +186,33 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  clearAllClock();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  clearNumberOnClock(counter - 1);
-	  if(counter >= 12)
+	  if(second >= 60)
 	  {
-		  counter = 0;
+		  second = 0;
+		  minute++;
 	  }
-	  setNumberOnClock(counter++);
-	  HAL_Delay (1000) ;
+	  if(minute >= 60)
+	  {
+		  minute = 0;
+		  hour++;
+	  }
+	  if(hour >= 12)
+	  {
+		  hour = 0;
+	  }
+	  clearAllClock();
+	  setNumberOnClock(second/5);
+	  setNumberOnClock(minute/5);
+	  setNumberOnClock(hour);
+	  second++;
+	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
