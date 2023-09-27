@@ -31,32 +31,57 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-enum color{Red, Yellow, Green};
+enum color{red, yellow, green};
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define Red_counter 5
-#define Yellow_counter 2
-#define Green_counter 3
+#define red_counter 5
+#define yellow_counter 2
+#define green_counter 3
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+GPIO_TypeDef *light_port[1][3] = {
+		{LED_RED_GPIO_Port, LED_YELLOW_GPIO_Port, LED_GREEN_GPIO_Port}
+};
+uint16_t light_pin[1][3] = {
+		{LED_RED_Pin, LED_YELLOW_Pin, LED_GREEN_Pin}
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-
+void on_light(enum color light, int cluster);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void on_light(enum color light, int cluster)
+{
+    cluster--;
+    switch (light)
+    {
+    case red:
+        HAL_GPIO_WritePin(light_port[cluster][red], light_pin[cluster][red], RESET);
+        HAL_GPIO_WritePin(light_port[cluster][yellow], light_pin[cluster][yellow], SET);
+        HAL_GPIO_WritePin(light_port[cluster][green], light_pin[cluster][green], SET);
+        break;
+    case yellow:
+        HAL_GPIO_WritePin(light_port[cluster][red], light_pin[cluster][red], SET);
+        HAL_GPIO_WritePin(light_port[cluster][yellow], light_pin[cluster][yellow], RESET);
+        HAL_GPIO_WritePin(light_port[cluster][green], light_pin[cluster][green], SET);
+        break;
+    default:
+        HAL_GPIO_WritePin(light_port[cluster][red], light_pin[cluster][red], SET);
+        HAL_GPIO_WritePin(light_port[cluster][yellow], light_pin[cluster][yellow], SET);
+        HAL_GPIO_WritePin(light_port[cluster][green], light_pin[cluster][green], RESET);
+    }
+}
 /* USER CODE END 0 */
 
 /**
@@ -66,8 +91,8 @@ static void MX_GPIO_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	enum color status = Yellow;
-	int timer_counter = Yellow_counter;
+	enum color status = yellow;
+	int timer_counter = yellow_counter;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -89,9 +114,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, SET);
-  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, RESET);
-  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, SET);
+  on_light(yellow, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,34 +123,28 @@ int main(void)
   {
 	  switch (status)
 	  {
-	  case Red:
+	  case red:
 		  if(timer_counter <= 0)
 		  {
-			  status = Green;
-			  timer_counter = Green_counter;
-			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, SET);
-			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, SET);
-			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, RESET);
+			  status = green;
+			  timer_counter = green_counter;
+			  on_light(green, 1);
 		  }
 		  break;
-	  case Green:
+	  case green:
 		  if(timer_counter <= 0)
 		  {
-			  status = Yellow;
-			  timer_counter = Yellow_counter;
-			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, SET);
-			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, RESET);
-			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, SET);
+			  status = yellow;
+			  timer_counter = yellow_counter;
+			  on_light(yellow, 1);
 		  }
 		  break;
 	  default:
 		  if(timer_counter <= 0)
 		  {
-			  status = Red;
-			  timer_counter = Red_counter;
-			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, RESET);
-			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, SET);
-			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, SET);
+			  status = red;
+			  timer_counter = red_counter;
+			  on_light(red, 1);
 		  }
 	  }
 	  timer_counter--;
